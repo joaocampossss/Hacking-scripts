@@ -22,7 +22,7 @@ def restore(dest_ip, src_ip):
     packet = scapy.ARP(op=2, pdst=dest_ip, hwdst=dest_mac, psrc=src_ip, hwsrc=src_mac)
     scapy.send(packet, verbose=False, count=4)
 
-target_ip = '192.168.42.129'
+target_ip = '192.168.42.130'
 gateway_ip = '192.168.42.2'
 
 try:
